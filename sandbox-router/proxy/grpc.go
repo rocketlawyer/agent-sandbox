@@ -16,6 +16,7 @@ package proxy
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"math"
 	"mime"
@@ -173,8 +174,8 @@ func remainingGRPCTimeout(duration time.Duration) string {
 	panic("time.Duration exceeds gRPC timeout encoding")
 }
 
-func grpcTransport(cfg *config.Config) *http.Transport {
-	tr := defaultTransport(cfg)
+func grpcTransport(cfg *config.Config, upstreamTLS *tls.Config) *http.Transport {
+	tr := defaultTransport(cfg, upstreamTLS)
 	tr.Protocols = new(http.Protocols)
 	tr.Protocols.SetUnencryptedHTTP2(true)
 	// A synchronous RPC may legitimately wait for headers until its command

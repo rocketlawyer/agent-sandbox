@@ -16,7 +16,6 @@ package proxy
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"math"
 	"mime"
@@ -29,6 +28,7 @@ import (
 	"google.golang.org/grpc/codes"
 
 	"sigs.k8s.io/agent-sandbox/sandbox-router/config"
+	"sigs.k8s.io/agent-sandbox/sandbox-router/tlsutil"
 )
 
 func isGRPCRequest(r *http.Request) bool {
@@ -174,7 +174,7 @@ func remainingGRPCTimeout(duration time.Duration) string {
 	panic("time.Duration exceeds gRPC timeout encoding")
 }
 
-func grpcTransport(cfg *config.Config, upstreamTLS *tls.Config) *http.Transport {
+func grpcTransport(cfg *config.Config, upstreamTLS *tlsutil.UpstreamTLS) *http.Transport {
 	tr := defaultTransport(cfg, upstreamTLS)
 	tr.Protocols = new(http.Protocols)
 	tr.Protocols.SetUnencryptedHTTP2(true)
